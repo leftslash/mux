@@ -14,13 +14,12 @@ func Logger(options *LogOptions) Middleware {
 			func(w http.ResponseWriter, r *http.Request) {
 				w2 := &responseWriter{statusCode: 200, ResponseWriter: w}
 				next.ServeHTTP(w2, r)
-				statusCode := w2.statusCode
 				log.Printf("%s %s %s %s %d %d %q\n",
 					strings.Split(r.Host, ":")[0],
 					r.Method,
 					r.URL.Path,
 					r.Proto,
-					statusCode,
+					w2.statusCode,
 					w2.contentLength,
 					r.Header.Get("User-Agent"),
 				)
