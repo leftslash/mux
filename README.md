@@ -6,6 +6,7 @@ This is a work in progress.  Use at your own risk.
 - Fix json funcs to write body after errors detected, not vice versa
 
 #### Enhancements
+- Make Use() variadic and return \*Router
 - Add appropriate secure cookie options to auth
 - Add signal handler to shutdwon gracefully
 - Add static utility method
