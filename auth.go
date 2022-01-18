@@ -22,10 +22,23 @@ func Auth(options AuthOptions) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {
+
 				var session *Session
 				cookie, err := r.Cookie(cookieName)
-				if err != nil {
-					// no cookie
+				cookieIsValid := false
+
+				if err == nil {
+					// cookie exists
+					id := cookie.Value
+					session, err = sessions.get(id)
+					if err == nil {
+						// found session for cookie
+						cookieIsValid = true
+					}
+				}
+
+				if !cookieIsValid {
+					// cookie is missing or expired
 					// try basic auth first
 					username, password, ok := r.BasicAuth()
 					if !ok {
@@ -46,16 +59,8 @@ func Auth(options AuthOptions) Middleware {
 						Name:  cookieName,
 						Value: id,
 					}
-				} else {
-					// cookie exists
-					id := cookie.Value
-					session, err = sessions.get(id)
-					if err != nil {
-						// session expired or invalid
-						http.Redirect(w, r, options.FailURL, http.StatusFound)
-						return
-					}
 				}
+
 				// add session to context
 				ctx, err := getContext(r)
 				if err == nil {
