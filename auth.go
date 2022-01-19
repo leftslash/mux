@@ -57,19 +57,18 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 				session = &Session{Username: username}
 				id := a.sessions.add(session)
 				// create a cookie
-				cookie = &http.Cookie{
-					Name:     cookieName,
-					Value:    id,
-					Path:     "/",
-					Secure:   true,
-					HttpOnly: true,
-				}
+				cookie = &http.Cookie{Name: cookieName, Value: id}
 			}
 			// add session to context
 			ctx, err := getContext(r)
 			if err == nil {
 				ctx.session = session
 			}
+			// add secure attributes to cookie
+			cookie.Path = "/"
+			cookie.Secure = true
+			cookie.HttpOnly = true
+			// set cookie and serve content
 			http.SetCookie(w, cookie)
 			next.ServeHTTP(w, r)
 		})
