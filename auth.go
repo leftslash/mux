@@ -58,8 +58,11 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 				id := a.sessions.add(session)
 				// create a cookie
 				cookie = &http.Cookie{
-					Name:  cookieName,
-					Value: id,
+					Name:     cookieName,
+					Value:    id,
+					Path:     "/",
+					Secure:   true,
+					HttpOnly: true,
 				}
 			}
 			// add session to context
