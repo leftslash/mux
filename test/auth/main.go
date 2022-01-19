@@ -24,7 +24,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	r.Use(mux.Auth(mux.AuthOptions{Validator: isValid, FailURL: "/login/"}))
+	r.Use(mux.NewAuth("/login", "/logout", isValid).Handle)
 	r.HandleFunc(http.MethodGet, "/", okHandler)
 	r.HandleFunc(http.MethodPost, "/", okHandler)
 	r.Run("127.0.0.1:8080")
