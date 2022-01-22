@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"log"
 	"sync"
 	"time"
 )
@@ -41,7 +40,7 @@ func (s *sessions) get(id string) (session *Session, err error) {
 		s.setExpiry(id)
 		return
 	}
-	err = fmt.Errorf("no such session")
+	err = fmt.Errorf("no session with id %d", id)
 	return
 }
 
@@ -75,11 +74,7 @@ func (s *sessions) setExpiry(id string) {
 
 func newSessionId() (id string) {
 	bytes := make([]byte, sessionIdLength)
-	_, err := rand.Read(bytes)
-	if err != nil {
-		log.Printf("error creating sessionId: %s", err.Error())
-		return
-	}
+	rand.Read(bytes)
 	id = base64.RawURLEncoding.EncodeToString(bytes)
 	return
 }

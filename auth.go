@@ -50,7 +50,7 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 				}
 				if !a.authenticator(username, password) {
 					// not authorized
-					http.Redirect(w, r, a.loginURL, http.StatusFound)
+					Redirect(w, r, a.loginURL)
 					return
 				}
 				// create a session
@@ -61,7 +61,9 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 			}
 			// add session to context
 			ctx, err := getContext(r)
-			if err == nil {
+			if err != nil {
+				Errorf(err, 0, "no context").Log()
+			} else {
 				ctx.session = session
 			}
 			// add secure attributes to cookie
@@ -79,9 +81,9 @@ func (a *Auth) HandleFunc(h http.HandlerFunc) http.Handler {
 }
 
 func (a *Auth) Logout(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie(cookieName)
-	if err == nil {
+	cookie, _ := r.Cookie(cookieName)
+	if cookie != nil {
 		a.sessions.remove(cookie.Value)
 	}
-	http.Redirect(w, r, a.logoutURL, http.StatusFound)
+	Redirect(w, r, a.logoutURL)
 }

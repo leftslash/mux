@@ -15,10 +15,14 @@ type muxContext struct {
 
 func getContext(r *http.Request) (ctx *muxContext, err error) {
 	val := r.Context().Value(contextKey)
+	if val == nil {
+		err = fmt.Errorf("no context for key %q", contextKey.String)
+		return
+	}
 	var ok bool
 	ctx, ok = val.(*muxContext)
 	if !ok {
-		err = fmt.Errorf("no context")
+		err = fmt.Errorf("context type not *muxContext")
 		return
 	}
 	return

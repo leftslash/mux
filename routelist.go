@@ -28,7 +28,7 @@ func (r *routelist) register(method, pattern string, handler http.Handler) {
 
 	err := validate(pattern)
 	if err != nil {
-		log.Fatalf("error registering pattern: %s; %s", pattern, err.Error())
+		log.Fatalf("error registering pattern: %s; %s", pattern, err)
 	}
 
 	var regexStr string
@@ -48,6 +48,6 @@ func (r *routelist) resolve(method, urlpath string) (route route, parms map[stri
 			return
 		}
 	}
-	err = fmt.Errorf("not found: %s", urlpath)
+	err = fmt.Errorf("cannot resolve url %q", urlpath)
 	return
 }
