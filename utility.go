@@ -17,7 +17,7 @@ func URLParam(r *http.Request, key string) (value string) {
 	}
 	ctx, err := getContext(r)
 	if err != nil {
-		Errorf(err, 0, "no context").Log()
+		Errorf(err, 0x1a67, "no context").Log()
 		return
 	}
 	value, _ = ctx.parms[key]
@@ -28,7 +28,7 @@ func GetSession(r *http.Request) (s *Session, e Error) {
 	var ctx *muxContext
 	ctx, err := getContext(r)
 	if err != nil {
-		e = Errorf(err, 0, "no session")
+		e = Errorf(err, 0x69d9, "no session")
 		e.Log()
 		return
 	}
@@ -44,8 +44,7 @@ func GetSession(r *http.Request) (s *Session, e Error) {
 func ReadJSON(w http.ResponseWriter, r *http.Request, v interface{}) (e Error) {
 	err := json.NewDecoder(r.Body).Decode(v)
 	if err != nil {
-		e = Errorf(err, 0, "decoding JSON")
-		http.Error(w, e.Error(), http.StatusBadRequest)
+		e = Errorf(err, 0xa9ca, "decoding JSON")
 	}
 	return
 }
@@ -54,8 +53,7 @@ func WriteJSON(w http.ResponseWriter, v interface{}) (e Error) {
 	var b []byte
 	b, err := json.Marshal(v)
 	if err != nil {
-		e = Errorf(err, 0, "encoding JSON")
-		http.Error(w, e.Error(), http.StatusInternalServerError)
+		e = Errorf(err, 0xbdf9, "encoding JSON")
 	}
 	w.Write(b)
 	return

@@ -40,7 +40,7 @@ func (s *sessions) get(id string) (session *Session, err error) {
 		s.setExpiry(id)
 		return
 	}
-	err = fmt.Errorf("no session with id %d", id)
+	err = fmt.Errorf("no session with id %q", id)
 	return
 }
 
