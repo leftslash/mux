@@ -41,19 +41,16 @@ func GetSession(r *http.Request) (s *Session, e Error) {
 	return
 }
 
-func ReadJSON(w http.ResponseWriter, r *http.Request, v interface{}) (e Error) {
-	err := json.NewDecoder(r.Body).Decode(v)
-	if err != nil {
-		e = Errorf(err, 0xa9ca, "decoding JSON")
-	}
+func ReadJSON(w http.ResponseWriter, r *http.Request, v interface{}) (err error) {
+	err = json.NewDecoder(r.Body).Decode(v)
 	return
 }
 
-func WriteJSON(w http.ResponseWriter, v interface{}) (e Error) {
+func WriteJSON(w http.ResponseWriter, v interface{}) (err error) {
 	var b []byte
-	b, err := json.Marshal(v)
+	b, err = json.Marshal(v)
 	if err != nil {
-		e = Errorf(err, 0xbdf9, "encoding JSON")
+		return
 	}
 	w.Write(b)
 	return
