@@ -2,6 +2,8 @@ package mux
 
 import (
 	"net/http"
+
+	"github.com/leftslash/xerror"
 )
 
 const cookieName = "id"
@@ -62,7 +64,7 @@ func (a *Auth) Handle(next http.Handler) http.Handler {
 			// add session to context
 			ctx, err := getContext(r)
 			if err != nil {
-				Errorf(err, 0, "no context").Log()
+				xerror.Errorf(err, 0, "no context").Log()
 			} else {
 				ctx.session = session
 			}

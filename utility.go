@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/leftslash/xerror"
 )
 
 func Redirect(w http.ResponseWriter, r *http.Request, url string) {
@@ -17,24 +19,24 @@ func URLParam(r *http.Request, key string) (value string) {
 	}
 	ctx, err := getContext(r)
 	if err != nil {
-		Errorf(err, 0x1a67, "no context").Log()
+		xerror.Errorf(err, 0x1a67, "no context").Log()
 		return
 	}
 	value, _ = ctx.parms[key]
 	return
 }
 
-func GetSession(r *http.Request) (s *Session, e Error) {
+func GetSession(r *http.Request) (s *Session, e xerror.Error) {
 	var ctx *muxContext
 	ctx, err := getContext(r)
 	if err != nil {
-		e = Errorf(err, 0x69d9, "no session")
+		e = xerror.Errorf(err, 0x69d9, "no session")
 		e.Log()
 		return
 	}
 	s = ctx.session
 	if s == nil {
-		e = Errorf(fmt.Errorf("context does not contain session"), 0, "no session")
+		e = xerror.Errorf(fmt.Errorf("context does not contain session"), 0, "no session")
 		e.Log()
 		return
 	}
