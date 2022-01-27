@@ -66,9 +66,7 @@ func (s *sessions) setExpiry(id string) {
 	session.timer = time.AfterFunc(sessionDuration, func() {
 		s.lock.Lock()
 		defer s.lock.Unlock()
-		if _, ok := s.list[id]; ok {
-			delete(s.list, id)
-		}
+		delete(s.list, id)
 	})
 }
 

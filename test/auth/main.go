@@ -19,7 +19,6 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintln(w, session.Username)
 	}
-	return
 }
 
 func main() {

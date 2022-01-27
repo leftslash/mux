@@ -67,15 +67,12 @@ func validate(pattern string) (err error) {
 // assumes pattern has been validated by validate()
 func normalize(pattern string) (regexStr string, length int) {
 
-	// string to cumulatively build input for regex compiler
-	regexStr = ""
-
 	// split pattern into slash separated components
 	// ignoring (via regex) duplicate slashes
 	dirs := dirRegex.Split(pattern, -1)
 
 	// recombine dirs into regexstr which
-	// removes any deuplicate slashes from input
+	// removes any duplicate slashes from input
 	regexStr += strings.Join(dirs, "/")
 
 	// last character in pattern
@@ -108,13 +105,14 @@ func compile(regexStr string) *regexp.Regexp {
 	regexStr = nonTrailingSlashRegex.ReplaceAllString(regexStr, "/+$1")
 
 	// replace trailing slash with dup friendly pattern
-	regexStr = trailingSlashRegex.ReplaceAllString(regexStr, "/*")
+	// regexStr = trailingSlashRegex.ReplaceAllString(regexStr, "/*")
+	regexStr = trailingSlashRegex.ReplaceAllString(regexStr, "/+")
 
 	// add beginning and ending match characters
 	regexStr = "^" + regexStr + "$"
 
 	// replace parameters with match patterns
-	regexStr = parmRegex.ReplaceAllString(regexStr, "(?P<$1>[^/]*)")
+	regexStr = parmRegex.ReplaceAllString(regexStr, "(?P<$1>[^/]+)")
 
 	// compile into regexp
 	return regexp.MustCompile(regexStr)

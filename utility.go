@@ -22,7 +22,7 @@ func URLParam(r *http.Request, key string) (value string) {
 		xerror.Errorf(err, 0x1a67, "no context").Log()
 		return
 	}
-	value, _ = ctx.parms[key]
+	value = ctx.parms[key]
 	return
 }
 
