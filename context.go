@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var contextKey = &struct{ String string }{"context.mux.leftslash.com"}
+type contextKey struct{}
 
 type muxContext struct {
 	parms   map[string]string
@@ -14,9 +14,9 @@ type muxContext struct {
 }
 
 func getContext(r *http.Request) (ctx *muxContext, err error) {
-	val := r.Context().Value(contextKey)
+	val := r.Context().Value(contextKey{})
 	if val == nil {
-		err = fmt.Errorf("no context for key %q", contextKey.String)
+		err = fmt.Errorf("no context for key")
 		return
 	}
 	var ok bool
@@ -29,5 +29,5 @@ func getContext(r *http.Request) (ctx *muxContext, err error) {
 }
 
 func setContext(r *http.Request, c *muxContext) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), contextKey, c))
+	return r.WithContext(context.WithValue(r.Context(), contextKey{}, c))
 }
